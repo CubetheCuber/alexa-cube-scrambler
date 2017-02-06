@@ -1,1 +1,137 @@
+/* eslint-disable  func-names */
+/* eslint quote-props: ["error", "consistent"]*/
+/**
+ * This sample demonstrates a simple skill built with the Amazon Alexa Skills
+ * nodejs skill development kit.
+ * This sample supports multiple lauguages. (en-US, en-GB, de-DE).
+ * The Intent Schema, Custom Slots and Sample Utterances for this skill, as well
+ * as testing instructions are located at https://github.com/alexa/skill-sample-nodejs-fact
+ **/
 
+'use strict';
+
+const Alexa = require('alexa-sdk');
+
+const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
+
+const languageStrings = {
+    'en-US': {
+        translation: {
+            Moves: [
+                'U',
+                'U i',
+                'U 2',
+                'D',
+                'D i',
+                'D 2',
+                'F',
+                'F i',
+                'F 2',
+                'B',
+                'B i',
+                'B 2',
+                'L',
+                'L i',
+                'L 2',
+                'R',
+                'R i',
+                'R 2',
+            ],
+            SKILL_NAME: 'Cube Scrambler',
+            GET_SCRAMBLE_MESSAGE: "Here's your scramble: ",
+            //HELP_MESSAGE: 'Ask for a scramble, and you shall recieve one. You can have me pause or resume at any time. Do you want a scramble?',
+            //HELP_REPROMPT: 'Do you want a scramble?',
+            STOP_MESSAGE: 'Goodbye, and happy cubing!',
+        },
+    },
+};
+
+const handlers = {
+    'LaunchRequest': function () {
+        this.emit('GetScramble');
+    },
+    'GetScrambleIntent': function () {
+        this.emit('GetScramble');
+    },
+    'GetScramble': function () {
+        // Get a random move from the moves list 
+        // Use this.t() to get corresponding language data
+        const moveArr = this.t('Moves');
+                
+        var i;
+        var icheck = false;
+        var previousrandommove;
+        var prepreviousrandommove;
+        var movestring = "";
+        var compoundmovestring = "";
+        var finalmovestringspeak = "";
+        var finalmovestringprint = "";
+        
+        for (i = 1; i <= 25; i++) {
+            const moveIndex = Math.floor(Math.random() * moveArr.length);
+            const randomMove = moveArr[moveIndex];
+            
+            if(i==2){
+                
+            } 
+            else {
+                //Checks to see if the type of notation (U, F, etc.) is the same by checking the first character of randomMove to see if it matches previousrandommoves'
+                if(randomMove.charAt(0) == previousrandommove.charAt(0)){
+                    icheck = true;
+                }
+                else if(randomMove.charAt(0) == prepreviousrandommove.charAt(0)) {
+                    if(randomMove.charAt(0) == "U" && previousrandommove.charAt(0) == "D"){
+                        
+                    }
+                }
+                else {
+                    previousrandommove = randomMove;
+                    movestring = randomMove;
+                    //Addes the " . " for a pause in the speaking
+                    compoundmovestring = movestring.concat( " . ");
+                    //Change the final versions of the strings
+                    finalmovestringspeak = finalmovestringspeak.concat( compoundmovestring );
+                        //The extra stuff is to remove the space for the print string to make it look nicer in the card, and
+                        //to add a space at the end for the same purpose
+                        if(movestring.length == 3){
+                            finalmovestringprint = finalmovestringprint.concat( movestring.replace(" ", "") + " ");
+                        } else {
+                            finalmovestringprint = finalmovestringprint.concat( movestring + " ");    
+                        }
+                }
+            }
+            if(icheck === true){
+                i--;
+                icheck = false;
+            }
+        
+        }
+        
+        // Create speech output
+        const speechOutput = this.t('GET_SCRAMBLE_MESSAGE') + finalmovestringspeak;
+        this.emit(':tellWithCard', speechOutput, this.t('SKILL_NAME'), finalmovestringprint);
+    },
+    //'AMAZON.HelpIntent': function () {
+    //    const speechOutput = this.t('HELP_MESSAGE');
+    //    const reprompt = this.t('HELP_MESSAGE');
+    //    this.emit(':ask', speechOutput, reprompt);
+    //},
+    'AMAZON.CancelIntent': function () {
+        this.emit(':tell', this.t('STOP_MESSAGE'));
+    },
+    'AMAZON.StopIntent': function () {
+        this.emit(':tell', this.t('STOP_MESSAGE'));
+    },
+    'SessionEndedRequest': function () {
+        this.emit(':tell', this.t('STOP_MESSAGE'));
+    },
+};
+
+exports.handler = (event, context) => {
+    const alexa = Alexa.handler(event, context);
+    alexa.APP_ID = APP_ID;
+    // To enable string internationalization (i18n) features, set a resources object.
+    alexa.resources = languageStrings;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
