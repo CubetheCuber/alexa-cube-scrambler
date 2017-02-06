@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "GetScrambleIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
