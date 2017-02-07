@@ -73,23 +73,23 @@ const handlers = {
                     icheck = true;
                 }
                 else if(randomMove.charAt(0) == prepreviousrandommove.charAt(0)) {
-                    if(randomMove.charAt(0) == "U" && previousrandommove.charAt(0) == "D"){
-                        
+                    if((randomMove.charAt(0)).replace("U","D") == previousrandommove.charat(0) || (randomMove.charAt(0)).replace("D","U") == previousrandommove.charat(0) || (randomMove.charAt(0)).replace("R","L") == previousrandommove.charat(0) || (randomMove.charAt(0)).replace("L","R") == previousrandommove.charat(0) || (randomMove.charAt(0)).replace("F","B") == previousrandommove.charat(0) || (randomMove.charAt(0)).replace("B","F") == previousrandommove.charat(0)){
+                       icheck = true;
                     }
                 }
                 else {
                     previousrandommove = randomMove;
                     movestring = randomMove;
                     //Addes the " . " for a pause in the speaking
-                    compoundmovestring = movestring.concat( " . ");
+                    compoundmovestring = movestring.concat(" . ");
                     //Change the final versions of the strings
-                    finalmovestringspeak = finalmovestringspeak.concat( compoundmovestring );
+                    finalmovestringspeak = finalmovestringspeak.concat(compoundmovestring);
                         //The extra stuff is to remove the space for the print string to make it look nicer in the card, and
                         //to add a space at the end for the same purpose
                         if(movestring.length == 3){
-                            finalmovestringprint = finalmovestringprint.concat( movestring.replace(" ", "") + " ");
+                            finalmovestringprint = finalmovestringprint.concat(movestring.replace(" ", "") + " ");
                         } else {
-                            finalmovestringprint = finalmovestringprint.concat( movestring + " ");    
+                            finalmovestringprint = finalmovestringprint.concat(movestring + " ");    
                         }
                 }
             }
